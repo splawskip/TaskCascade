@@ -1,68 +1,84 @@
-import {
-  generateUUIDv4,
-  getURLHash,
-  delegateEvent,
-  insertHTML,
-  replaceHTML,
-} from './utils';
-
+import { generateUUIDv4, getURLHash, insertHTML, replaceHTML } from './utils';
 import handleThemeSwitcher from './theme-switch';
 import { TodoStorage } from './todo-storage';
 
+// Init Todo Storage.
 const Todos = new TodoStorage('todos');
 
+// Build the App.
 const App = {
+  // DOM elements that the App "knows".
   selectors: {
-    // DOM Elements.
     input: document.querySelector('[data-todo="new"]'),
-    clear: document.querySelector('[data-todo="clear-completed"]'),
     list: document.querySelector('[data-todo="list"]'),
     footer: document.querySelector('[data-todo="footer"]'),
     counter: document.querySelector('[data-todo="count"]'),
-    // Manipulation methods on DOM Elements.
-    showList(show) {
-      App.selectors.list.style.display = show ? 'block' : 'none';
-    },
-    showFooter(show) {
-      App.selectors.footer.style.display = show ? 'flex' : 'none';
-    },
-    showClear(show) {
-      App.selectors.clear.style.display = show ? 'block' : 'none';
-    },
-    showCounter(count) {
-      replaceHTML(
-        App.selectors.counter,
-        `
-			<strong>${count}</strong> ${count > 1 ? 'items' : 'item'} left</span>
-		`
-      );
-    },
-    setActiveFilter(filter) {
-      document.querySelectorAll(`[data-todo="filters"] a`).forEach((el) => {
-        if (el.matches(`[href="#/${filter}"]`)) {
-          el.classList.add('text-blue-700');
-        } else {
-          el.classList.remove('text-blue-700');
-        }
-      });
-    },
+    filters: document.querySelectorAll('[data-todo="filters"] a'),
+    clear: document.querySelector('[data-todo="clear-completed"]'),
   },
-  addTodo() {
+  /**
+   * Decides if "Clear completed" button should be visible.
+   *
+   * @param {Number|Bool} show - Tells if component should be visible.
+   */
+  showList(show) {
+    App.selectors.list.style.display = show ? 'block' : 'none';
+  },
+  /**
+   * Decides if "Clear completed" button should be visible.
+   *
+   * @param {Number|Bool} show - Tells if component should be visible.
+   */
+  showFooter(show) {
+    App.selectors.footer.style.display = show ? 'flex' : 'none';
+  },
+  /**
+   * Decides if "Clear completed" button should be visible.
+   *
+   * @param {Number|Bool} count - Tells if component should be visible.
+   */
+  showCounter(count) {
+    replaceHTML(
+      App.selectors.counter,
+      `<strong>${count}</strong> ${count === 1 ? 'item' : 'items'} left`
+    );
+  },
+  /**
+   * Decides if "Clear completed" button should be visible.
+   *
+   * @param {Number|Bool} show - Tells if component should be visible.
+   */
+  showClear(show) {
+    App.selectors.clear.style.display = show ? 'block' : 'none';
+  },
+  /**
+   * Adds new Todo item to the storage.
+   */
+  addTodoItem() {
     App.selectors.input.addEventListener('keyup', (e) => {
       if (e.key === 'Enter' && e.target.value.length) {
+        // Create new Todo item based on the user input.
         Todos.add({
           id: generateUUIDv4(),
           title: e.target.value,
           completed: false,
         });
+        // Reset input value.
         App.selectors.input.value = '';
-        App.render();
       }
     });
   },
+  /**
+   * Creates single Todo item component based on Todo item data.
+   *
+   * @param {Object} todo - Todo item.
+   * @returns {HTMLElement} - Li tag that represents Todo item.
+   */
   createTodoItem(todo) {
     // Create li element representing single todo item.
     const li = document.createElement('li');
+    // Get if current todo is completed.
+    const isCompleted = todo.completed;
     // Apply Tailwind styles to it.
     li.classList.add(
       'relative',
@@ -79,70 +95,51 @@ const App = {
     insertHTML(
       li,
       `
-		  <div class="view flex flex-row justify-start items-center flex-nowrap">
-			  <input class="toggle relative mr-8 appearance-none w-6 h-6 border border-solid cursor-pointer border-snuff rounded-full bg-transparent checked:bg-gradient checked:border-transparent before:content-[''] before:absolute before:inset-0 before:text-white before:text-md before:text-center before:w-full checked:before:content-['\\2713']" data-todo="toggle" type="checkbox"
-				  ${todo.completed ? 'checked' : ''}>
-			  <label class="text-lg ${
-          todo.completed ? 'line-through' : false
-        }" data-todo="label">${todo.title}</label>
-			  <button class="destroy ml-auto" data-todo="remove">X</button>
-		  </div>
-		  <input class="edit hidden" data-todo="edit">
-	  `
+			<div class="view flex flex-row justify-start items-center flex-nowrap">
+				<input class="toggle relative mr-8 appearance-none w-6 h-6 border border-solid cursor-pointer border-snuff rounded-full bg-transparent checked:bg-gradient checked:border-transparent before:content-[''] before:absolute before:inset-0 before:text-white before:text-md before:text-center before:w-full checked:before:content-['\\2713']" data-todo="toggle" type="checkbox"
+					${isCompleted ? 'checked' : ''}>
+				<label class="text-lg ${
+          isCompleted ? 'line-through' : false
+        }" data-todo="label"></label>
+				<button class="destroy ml-auto" data-todo="remove">X</button>
+			</div>
+			<input class="edit hidden" data-todo="edit">
+		`
     );
+    // Set label for Todo item.
+    li.querySelector('[data-todo="label"]').textContent = todo.title;
+    // Set value for edit state.
     li.querySelector('[data-todo="edit"]').value = todo.title;
-    // Return node.
+    // Return element.
     return li;
   },
   /**
-   * Delegate event to the desired Todo item.
-   *
-   * @param {String} event - String that represents name of the event.
-   * @param {String} selector - String that represents valid CSS selector.
-   * @param {Function} handler - Callback function that we want to run on event.
+   * Handles initial work before render action.
    */
-  todoEvent(event, selector, handler) {
-    delegateEvent(App.selectors.list, selector, event, (e) => {
-      const el = e.target.closest('[data-id]');
-      handler(Todos.get(el.dataset.id), el, e);
-    });
-  },
-  bindEvents() {
-    // Handle removal of the Todo item.
-    App.todoEvent('click', '[data-todo="remove"]', (todo) => {
-      Todos.remove(todo);
-    });
-    // Handle toggling completed state of the Todo item.
-    App.todoEvent('click', '[data-todo="toggle"]', (todo) =>
-      Todos.toggle(todo)
-    );
-    App.addTodo();
-  },
   init() {
     handleThemeSwitcher();
-    /**
-     * Since TodoStorage class extends EventTarget we can attach and run events on it.
-     * Every change in TodoStorage will trigger the re-render of the list.
-     * */
     Todos.addEventListener('save', App.render);
     App.filter = getURLHash();
     window.addEventListener('hashchange', () => {
       App.filter = getURLHash();
       App.render();
     });
-    App.bindEvents();
     App.render();
+    App.addTodoItem();
   },
+  /**
+   * Renders the app components that depends of the App state.
+   */
   render() {
     const count = Todos.getFiltered('all').length;
     App.selectors.list.replaceChildren(
       ...Todos.getFiltered(App.filter).map((todo) => App.createTodoItem(todo))
     );
-    App.selectors.showList(count);
-    App.selectors.showFooter(count);
-    App.selectors.showClear(Todos.hasCompleted());
-    App.selectors.showCounter(Todos.getFiltered('active').length);
-    App.selectors.setActiveFilter(App.filter);
+    App.showList(count);
+    App.showFooter(count);
+    App.showCounter(Todos.getFiltered('active').length);
+    App.showClear(Todos.hasCompleted());
   },
 };
+// Boot the App.
 App.init();
