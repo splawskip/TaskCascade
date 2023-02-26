@@ -13,7 +13,7 @@ const Todos = new TodoStorage('todos');
 
 // Build the App.
 const App = {
-  // DOM elements that the App "knows".
+  // DOM elements that App "knows".
   selectors: {
     input: document.querySelector('[data-todo="new"]'),
     list: document.querySelector('[data-todo="list"]'),
@@ -23,7 +23,7 @@ const App = {
     clear: document.querySelector('[data-todo="clear-completed"]'),
   },
   /**
-   * "Sets" currently active fillter by applying some style.
+   * Sets currently active fillter by applying some style.
    *
    * @param {String} filter - Value from getURLHash function.
    */
@@ -37,7 +37,7 @@ const App = {
     });
   },
   /**
-   * Decides if "Clear completed" button should be visible.
+   * Decides if List component should be visible.
    *
    * @param {Number|Bool} show - Tells if component should be visible.
    */
@@ -45,7 +45,7 @@ const App = {
     App.selectors.list.style.display = show ? 'block' : 'none';
   },
   /**
-   * Decides if "Clear completed" button should be visible.
+   * Decides if Footer component should be visible.
    *
    * @param {Number|Bool} show - Tells if component should be visible.
    */
@@ -53,11 +53,11 @@ const App = {
     App.selectors.footer.style.display = show ? 'flex' : 'none';
   },
   /**
-   * Decides if "Clear completed" button should be visible.
+   * Updates Counter component state.
    *
    * @param {Number|Bool} count - Tells if component should be visible.
    */
-  showCounter(count) {
+  updateCounter(count) {
     replaceHTML(
       App.selectors.counter,
       `<strong>${count}</strong> ${count === 1 ? 'item' : 'items'} left`
@@ -142,8 +142,10 @@ const App = {
    */
   handleTodoItemEvent(event, selector, handler) {
     delegateEvent(App.selectors.list, selector, event, (e) => {
+      // Grab li element that holds Todo item id.
       const element = e.target.closest('[data-id]');
-      handler(Todos.get(element.dataset.id));
+      // Pass Todo item object, li element and event object to the handler.
+      handler(Todos.get(element.dataset.id), element, e);
     });
   },
   /**
@@ -163,14 +165,55 @@ const App = {
     App.handleTodoItemEvent('click', '[data-todo="toggle"]', (todo) =>
       Todos.toggle(todo)
     );
-    // Handle cleanse of completed Todo items.
-    App.selectors.clear.addEventListener('click', () => {
-      Todos.clearCompleted();
-    });
     // Handle removal of Todo item.
     App.handleTodoItemEvent('click', '[data-todo="remove"]', (todo) =>
       Todos.remove(todo)
     );
+    // Enable edit state on Todo item.
+    App.handleTodoItemEvent('dblclick', '[data-todo="label"]', (todo, li) => {
+      // Add class that indicates that we are in edit state.
+      li.classList.add('editing');
+      // Grab edit input.
+      const editInput = li.querySelector('[data-todo="edit"]');
+      // Show edit input with focus.
+      editInput.classList.remove('hidden');
+      editInput.focus();
+    });
+    // Handle update of Todo item.
+    App.handleTodoItemEvent('keyup', '[data-todo="edit"]', (todo, li, e) => {
+      // Grab edit input.
+      const editInput = li.querySelector('[data-todo="edit"]');
+      // Update Todo item and remove edit state.
+      if (e.key === 'Enter' && editInput.value) {
+        li.classList.remove('editing');
+        editInput.classList.add('hidden');
+        Todos.update({ ...todo, title: editInput.value });
+      }
+      // Remove focus state from edit input.
+      if (e.key === 'Escape') document.activeElement.blur();
+    });
+    // Handle App re-render when edit is done.
+    App.handleTodoItemEvent('focusout', '[data-todo="edit"]', (todo, li) => {
+      if (li.classList.contains('editing')) App.render();
+    });
+    // Handle cleanse of completed Todo items.
+    App.selectors.clear.addEventListener('click', () => {
+      Todos.clearCompleted();
+    });
+  },
+  /**
+   * Renders App components based on state.
+   */
+  render() {
+    const count = Todos.getByFilter('all').length;
+    App.setActiveFilter(App.filter);
+    App.selectors.list.replaceChildren(
+      ...Todos.getByFilter(App.filter).map((todo) => App.createTodoItem(todo))
+    );
+    App.showList(count);
+    App.showFooter(count);
+    App.updateCounter(Todos.getByFilter('active').length);
+    App.showClear(Todos.hasCompleted());
   },
   /**
    * Handles initial work before render action.
@@ -180,20 +223,6 @@ const App = {
     App.filter = getURLHash();
     App.bindEvents();
     App.render();
-  },
-  /**
-   * Renders the app components that depends of the App state.
-   */
-  render() {
-    const count = Todos.getFiltered('all').length;
-    App.setActiveFilter(App.filter);
-    App.selectors.list.replaceChildren(
-      ...Todos.getFiltered(App.filter).map((todo) => App.createTodoItem(todo))
-    );
-    App.showList(count);
-    App.showFooter(count);
-    App.showCounter(Todos.getFiltered('active').length);
-    App.showClear(Todos.hasCompleted());
   },
 };
 // Boot the App.
