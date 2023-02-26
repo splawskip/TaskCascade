@@ -72,7 +72,7 @@ export class TodoStorage extends EventTarget {
    * @returns {Void}
    */
   update(newTodo) {
-    this.todos.map((oldTodo) =>
+    this.todos = this.todos.map((oldTodo) =>
       oldTodo.id === newTodo.id ? newTodo : oldTodo
     );
     this.save();
@@ -89,12 +89,12 @@ export class TodoStorage extends EventTarget {
   }
 
   /**
-   * Get todo items filtered by given filter.
+   * Gets todo items filtered by given filter.
    *
    * @param {String} filter - String that represents filter name.
    * @returns {Array} - Array of todos filtered by given filter.
    */
-  getFiltered(filter) {
+  getByFilter(filter) {
     // Get container for filtered todos.
     let filteredTodos = [];
     // Resolve which type of todos should be returned.
