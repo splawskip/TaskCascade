@@ -123,7 +123,7 @@ const App = {
         }" data-todo="label"></label>
 				<button class="destroy ml-auto" data-todo="remove">X</button>
 			</div>
-			<input class="edit hidden" data-todo="edit">
+			<input class="edit hidden absolute inset-0 w-full h-full" data-todo="edit">
 		`
     );
     // Set label for Todo item.
@@ -163,6 +163,10 @@ const App = {
     App.handleTodoItemEvent('click', '[data-todo="toggle"]', (todo) =>
       Todos.toggle(todo)
     );
+    // Handle cleanse of completed Todo items.
+    App.selectors.clear.addEventListener('click', () => {
+      Todos.clearCompleted();
+    });
   },
   /**
    * Handles initial work before render action.
