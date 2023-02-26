@@ -159,9 +159,13 @@ const App = {
     });
     // Handle item addition.
     App.addTodoItem();
-    // Handle completed state change.
+    // Handle completed state change of Todo item.
     App.handleTodoItemEvent('click', '[data-todo="toggle"]', (todo) =>
       Todos.toggle(todo)
+    );
+    // Handle removal of Todo item.
+    App.handleTodoItemEvent('click', '[data-todo="remove"]', (todo) =>
+      Todos.remove(todo)
     );
   },
   /**
