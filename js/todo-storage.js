@@ -26,6 +26,8 @@ export class TodoStorage extends EventTarget {
    */
   save() {
     localStorage.setItem(this.localStorageKey, JSON.stringify(this.todos));
+    // As TodoStorage extends EventTarget, the class is able to handle events.
+    this.dispatchEvent(new CustomEvent('save'));
   }
 
   /**
@@ -59,7 +61,7 @@ export class TodoStorage extends EventTarget {
    * @returns {Void}
    */
   remove({ id }) {
-    this.todos.filter((todo) => todo.id !== id);
+    this.todos = this.todos.filter((todo) => todo.id !== id);
     this.save();
   }
 
@@ -82,7 +84,7 @@ export class TodoStorage extends EventTarget {
    * @param {String} id - ID of the todo item.
    * @returns {Object} - Todo item.
    */
-  get({ id }) {
+  get(id) {
     return this.todos.find((todo) => todo.id === id);
   }
 
@@ -101,11 +103,11 @@ export class TodoStorage extends EventTarget {
         filteredTodos = this.todos.filter((todo) => !todo.completed);
         break;
       case 'completed':
-        filteredTodos = this.todos.filter((todo) => !todo.completed);
+        filteredTodos = this.todos.filter((todo) => todo.completed);
         break;
       case 'all':
       default:
-        filteredTodos = this.todo;
+        filteredTodos = this.todos;
     }
     // Show filtered todos to the world.
     return filteredTodos;
