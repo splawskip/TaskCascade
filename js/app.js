@@ -1,4 +1,10 @@
-import { generateUUIDv4, getURLHash, insertHTML, replaceHTML } from './utils';
+import {
+  delegateEvent,
+  generateUUIDv4,
+  getURLHash,
+  insertHTML,
+  replaceHTML,
+} from './utils';
 import handleThemeSwitcher from './theme-switch';
 import { TodoStorage } from './todo-storage';
 
@@ -15,6 +21,20 @@ const App = {
     counter: document.querySelector('[data-todo="count"]'),
     filters: document.querySelectorAll('[data-todo="filters"] a'),
     clear: document.querySelector('[data-todo="clear-completed"]'),
+  },
+  /**
+   * "Sets" currently active fillter by applying some style.
+   *
+   * @param {String} filter - Value from getURLHash function.
+   */
+  setActiveFilter(filter) {
+    App.selectors.filters.forEach((element) => {
+      if (element.matches(`[href="#/${filter}"]`)) {
+        element.classList.add('text-blue-500');
+      } else {
+        element.classList.remove('text-blue-500');
+      }
+    });
   },
   /**
    * Decides if "Clear completed" button should be visible.
@@ -114,24 +134,51 @@ const App = {
     return li;
   },
   /**
-   * Handles initial work before render action.
+   * Delegates given event from the list to Todo item on which event occured.
+   *
+   * @param {String} event - Name of the event that we want to run.
+   * @param {String} selector - CSS selector that will find element to which we want attach the given event.
+   * @param {Function} handler - Function that we want to run on given event.
    */
-  init() {
-    handleThemeSwitcher();
+  handleTodoItemEvent(event, selector, handler) {
+    delegateEvent(App.selectors.list, selector, event, (e) => {
+      const element = e.target.closest('[data-id]');
+      handler(Todos.get(element.dataset.id));
+    });
+  },
+  /**
+   * Binds all App related events.
+   */
+  bindEvents() {
+    // Refresh view everytime Todos data changed.
     Todos.addEventListener('save', App.render);
-    App.filter = getURLHash();
+    // Handle filter change.
     window.addEventListener('hashchange', () => {
       App.filter = getURLHash();
       App.render();
     });
-    App.render();
+    // Handle item addition.
     App.addTodoItem();
+    // Handle completed state change.
+    App.handleTodoItemEvent('click', '[data-todo="toggle"]', (todo) =>
+      Todos.toggle(todo)
+    );
+  },
+  /**
+   * Handles initial work before render action.
+   */
+  init() {
+    handleThemeSwitcher();
+    App.filter = getURLHash();
+    App.bindEvents();
+    App.render();
   },
   /**
    * Renders the app components that depends of the App state.
    */
   render() {
     const count = Todos.getFiltered('all').length;
+    App.setActiveFilter(App.filter);
     App.selectors.list.replaceChildren(
       ...Todos.getFiltered(App.filter).map((todo) => App.createTodoItem(todo))
     );
