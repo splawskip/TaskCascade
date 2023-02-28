@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="css/style.css" />
     <title>To Do App</title>
   </head>
-  <body class="bg-white dark:bg-ebony">
+  <body class="bg-white dark:bg-gray-900">
     <main class="grid w-full place-items-center">
       <header
         class="grid min-h-1/3 w-full place-items-center bg-hero bg-cover bg-center bg-no-repeat dark:bg-hero-dark"
@@ -69,12 +69,14 @@
             type="text"
             placeholder="Create a new todo..."
             autofocus
-            class="col-span-2 w-full rounded-md bg-white px-6 py-5 text-lg shadow-xl outline-none placeholder:text-slate-500 focus:ring-2 dark:bg-ebony dark:text-slate-300"
+            class="col-span-2 w-full rounded-md bg-white px-6 py-5 text-lg shadow-xl outline-none placeholder:text-slate-500 focus:ring-2 focus:ring-indigo-600 dark:bg-ebony dark:text-slate-300"
             data-todo="new"
           />
         </div>
       </header>
-      <section class="w-full max-w-xl -translate-y-20 rounded-md shadow-xl">
+      <section
+        class="w-full max-w-xl -translate-y-20 rounded-md bg-white shadow-xl dark:bg-ebony"
+      >
         <ul
           class="flex flex-col flex-nowrap items-stretch justify-start"
           data-todo="list"
@@ -90,14 +92,18 @@
             class="flex flex-row flex-nowrap items-center justify-between gap-5 text-sm font-bold text-slate-400"
             data-todo="filters"
           >
-            <li class="hover:text-slate-600"><a href="#/">All</a></li>
-            <li class="hover:text-slate-600"><a href="#/active">Active</a></li>
-            <li class="hover:text-slate-600">
+            <li class="transition-colors hover:text-indigo-600">
+              <a href="#/">All</a>
+            </li>
+            <li class="transition-colors hover:text-indigo-600">
+              <a href="#/active">Active</a>
+            </li>
+            <li class="transition-colors hover:text-indigo-600">
               <a href="#/completed">Completed</a>
             </li>
           </ul>
           <button
-            class="text-sm text-slate-400 hover:text-slate-600"
+            class="text-sm text-slate-400 transition-colors hover:text-indigo-600"
             data-todo="clear-completed"
           >
             Clear Completed

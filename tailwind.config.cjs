@@ -10,6 +10,10 @@ module.exports = {
         ebony: '#25273D',
         snuff: '#E3E4F1',
         bright: '#393A4B',
+        trout: '#4D5067',
+        mischka: '#D1D2DA',
+        'mulled-wine': '#494C6B',
+        'periwinkle-gray': '#C8CBE7',
       },
       fontFamily: {
         sans: ['Josefin Sans', ...defaultTheme.fontFamily.sans],
