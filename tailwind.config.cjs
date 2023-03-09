@@ -22,7 +22,7 @@ module.exports = {
         '1/3': 'calc(100vh/3)',
       },
       backgroundImage: {
-        hero: "url('/img/hero.jpg')",
+        'hero-light': "url('/img/hero-light.jpg')",
         'hero-dark': "url('/img/hero-dark.jpg')",
         gradient: 'linear-gradient(135deg, #55DDFF 0%, #C058F3 100%)',
       },
