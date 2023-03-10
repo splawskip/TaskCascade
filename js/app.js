@@ -4,9 +4,9 @@ import {
   getURLHash,
   insertHTML,
   replaceHTML,
-} from './utils';
-import handleThemeSwitcher from './theme-switch';
-import { TodoStorage } from './todo-storage';
+} from './utils.js';
+import handleThemeSwitcher from './theme-switch.js';
+import { TodoStorage } from './todo-storage.js';
 
 // Init Todo Storage.
 const Todos = new TodoStorage('todos');
