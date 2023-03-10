@@ -25,14 +25,17 @@ const App = {
   /**
    * Sets currently active fillter by applying some style.
    *
-   * @param {String} filter - Value from getURLHash function.
+   * @param {String} filter - Filter name.
    */
   setActiveFilter(filter) {
+    // Loop over filters and find matching one.
     App.selectors.filters.forEach((element) => {
+      // Make matchin filter active.
       if (element.matches(`[href="#/${filter}"]`)) {
-        element.classList.add('font-bold', 'text-indigo-600');
+        element.classList.add('active', 'font-bold', 'text-indigo-600');
       } else {
-        element.classList.remove('font-bold', 'text-indigo-600');
+        // Make other filters inactive.
+        element.classList.remove('active', 'font-bold', 'text-indigo-600');
       }
     });
   },
@@ -89,6 +92,22 @@ const App = {
     });
   },
   /**
+   * Enables edit state on todo item component.
+   *
+   * @param {Object} todo - Todo item.
+   * @param {HTMLElement} li - Todo item HTMLElement.
+   * @returns {Void}
+   */
+  editTodoItem(todo, li) {
+    // Add class that indicates that we are in edit state.
+    li.classList.add('editing');
+    // Grab edit input.
+    const editInput = li.querySelector('[data-todo="edit"]');
+    // Show edit input with focus.
+    editInput.classList.remove('hidden');
+    editInput.focus();
+  },
+  /**
    * Creates single Todo item component based on Todo item data.
    *
    * @param {Object} todo - Todo item.
@@ -126,12 +145,12 @@ const App = {
 				class="toggle relative h-6 w-6 min-w-[24px] cursor-pointer appearance-none overflow-hidden rounded-full border border-solid border-snuff bg-transparent outline-none before:absolute before:left-0 before:top-1/3 before:h-1/2 before:w-[3px] before:origin-bottom-left before:translate-x-[10px] before:-rotate-45 before:bg-white before:opacity-0 before:content-[''] after:absolute after:left-0 after:bottom-[20%] after:h-[3px] after:w-3/4 after:origin-bottom-left after:translate-x-[10px] after:-rotate-45 after:bg-white after:opacity-0 after:content-[''] checked:border-transparent checked:bg-gradient checked:before:opacity-100 checked:after:opacity-100 hover:ring-2 hover:ring-indigo-600 hover:transition-colors focus-visible:ring-2 focus-visible:ring-indigo-600 dark:border-bright"
 				data-todo="toggle"
 				type="checkbox" ${isCompleted ? 'checked' : ''}>
-			<label class="transition-colors break-all cursor-pointer grow text-lg text-mulled-wine dark:text-periwinkle-gray
+			<label class="transition-colors break-all cursor-pointer grow text-lg text-mulled-wine dark:text-periwinkle-gray outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 rounded-md
 			${
         isCompleted ? 'text-mischka dark:text-trout line-through' : ''
-      }" data-todo="label"></label>
+      }" tabindex="0" data-todo="label"></label>
 			<button
-				class="destroy pointer-events-none relative ml-auto h-5 w-5 min-w-[20px] opacity-0 outline-none transition-opacity before:absolute before:top-1/2 before:left-1/2 before:h-px before:w-full before:-translate-x-1/2 before:-translate-y-1/2 before:rotate-45 before:border before:border-solid before:border-slate-400 before:transition-colors before:content-[''] after:absolute after:top-1/2 after:left-1/2 after:h-px after:w-full after:-translate-x-1/2 after:-translate-y-1/2 after:-rotate-45 after:border after:border-solid after:border-slate-400 after:transition-colors after:content-[''] hover:before:border-indigo-600 hover:after:border-indigo-600 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-indigo-600 group-hover:pointer-events-auto group-hover:opacity-100"
+				class="destroy pointer-events-none relative ml-auto h-5 w-5 min-w-[20px] opacity-0 outline-none transition-opacity before:absolute before:top-1/2 before:left-1/2 before:h-px before:w-full before:-translate-x-1/2 before:-translate-y-1/2 before:rotate-45 before:border before:border-solid before:border-slate-400 before:transition-colors before:content-[''] after:absolute after:top-1/2 after:left-1/2 after:h-px after:w-full after:-translate-x-1/2 after:-translate-y-1/2 after:-rotate-45 after:border after:border-solid after:border-slate-400 after:transition-colors after:content-[''] hover:before:border-indigo-600 hover:after:border-indigo-600 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-indigo-600 group-hover:pointer-events-auto group-hover:opacity-100 rounded-md"
 				data-todo="remove"
 			></button>
 		</div>
@@ -184,15 +203,15 @@ const App = {
     App.handleTodoItemEvent('click', '[data-todo="remove"]', (todo) =>
       Todos.remove(todo)
     );
-    // Enable edit state on Todo item.
-    App.handleTodoItemEvent('dblclick', '[data-todo="label"]', (todo, li) => {
-      // Add class that indicates that we are in edit state.
-      li.classList.add('editing');
-      // Grab edit input.
-      const editInput = li.querySelector('[data-todo="edit"]');
-      // Show edit input with focus.
-      editInput.classList.remove('hidden');
-      editInput.focus();
+    // Enable edit state on Todo item via mouse.
+    App.handleTodoItemEvent(
+      'dblclick',
+      '[data-todo="label"]',
+      App.editTodoItem
+    );
+    // Enable edit state on Todo item via keyboard.
+    App.handleTodoItemEvent('keyup', '[data-todo="label"]', (todo, li, e) => {
+      if (e.key === 'Enter') App.editTodoItem(todo, li, e);
     });
     // Handle update of Todo item.
     App.handleTodoItemEvent('keyup', '[data-todo="edit"]', (todo, li, e) => {
