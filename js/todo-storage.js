@@ -146,6 +146,7 @@ export class TodoStorage extends EventTarget {
 
   /**
    * Toggles completed state of all todos.
+   *
    * @returns {Void}
    */
   toggleAll() {
@@ -156,6 +157,7 @@ export class TodoStorage extends EventTarget {
 
   /**
    * Removes completed todos from storage.
+   *
    * @returns {Void}
    */
   clearCompleted() {

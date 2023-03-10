@@ -10,6 +10,10 @@ module.exports = {
         ebony: '#25273D',
         snuff: '#E3E4F1',
         bright: '#393A4B',
+        trout: '#4D5067',
+        mischka: '#D1D2DA',
+        'mulled-wine': '#494C6B',
+        'periwinkle-gray': '#C8CBE7',
       },
       fontFamily: {
         sans: ['Josefin Sans', ...defaultTheme.fontFamily.sans],
@@ -18,7 +22,7 @@ module.exports = {
         '1/3': 'calc(100vh/3)',
       },
       backgroundImage: {
-        hero: "url('/img/hero.jpg')",
+        'hero-light': "url('/img/hero-light.jpg')",
         'hero-dark': "url('/img/hero-dark.jpg')",
         gradient: 'linear-gradient(135deg, #55DDFF 0%, #C058F3 100%)',
       },
