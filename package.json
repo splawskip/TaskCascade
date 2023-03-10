@@ -3,16 +3,29 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
+  "description": "Todo App",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/splawskip/to-do-list.git"
+  },
+  "author": "psplawski.dev",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/splawskip/to-do-list/issues"
+  },
+  "homepage": "https://splawskip.github.io/to-do-list/",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
+    "deploy": "gh-pages -d dist",
     "docs": "jsdoc ./js/todo-store-new.js"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.13",
+    "gh-pages": "^4.0.0",
     "eslint": "^8.34.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^8.6.0",
