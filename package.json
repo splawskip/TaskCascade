@@ -16,6 +16,7 @@
   "homepage": "https://splawskip.github.io/to-do-list/",
   "scripts": {
     "dev": "vite",
+    "host": "vite --host",
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint .",
