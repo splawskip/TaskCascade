@@ -155,7 +155,7 @@ const App = {
 			></button>
 		</div>
 		<input
-    		class="absolute inset-0 hidden h-full w-full rounded-md bg-white px-6 py-5 text-lg shadow-xl outline-none transition-colors placeholder:text-slate-500 focus:ring-2 focus:ring-indigo-600 dark:bg-ebony dark:text-slate-300 caret-indigo-600"
+    		class="absolute appearance-none inset-0 hidden h-full w-full rounded-md bg-white px-6 py-5 text-lg shadow-xl outline-none transition-colors placeholder:text-slate-500 focus:ring-2 focus:ring-indigo-600 dark:bg-ebony dark:text-slate-300 caret-indigo-600"
     		data-todo="edit"
   		/>
 		`
