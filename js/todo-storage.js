@@ -1,4 +1,4 @@
-import { generateUUIDv4 } from './utils.js';
+import { generateUUIDv4 } from './utils';
 
 export class TodoStorage extends EventTarget {
   /**
