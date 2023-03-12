@@ -29,6 +29,25 @@ module.exports = {
       gridTemplateColumns: {
         'two-columns-min-content': 'repeat(2, min-content)',
       },
+      keyframes: {
+        pulse: {
+          '0%': {
+            transform: 'scale(1) rotate(45deg)',
+            opacity: '1',
+          },
+          '50%': {
+            transform: 'scale(1.3) rotate(45deg)',
+            opacity: '1',
+          },
+          '100%': {
+            transform: 'scale(1) rotate(45deg)',
+            opacity: '1',
+          },
+        },
+      },
+      animation: {
+        pulse: 'pulse 700ms infinite',
+      },
     },
   },
   plugins: [],
