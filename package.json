@@ -21,6 +21,7 @@
     "preview": "vite preview",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
+    "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
     "jsdoc": "jsdoc ./js/"
   },
