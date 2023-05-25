@@ -21,8 +21,9 @@
     "preview": "vite preview",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
+    "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
-    "docs": "jsdoc ./js/todo-store-new.js"
+    "jsdoc": "jsdoc ./js/"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.13",
