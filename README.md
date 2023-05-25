@@ -18,9 +18,9 @@ You can access the live version of TaskCascade by visiting: [TaskCascade Live](h
 
 ## Tech Stack:
 
-- **HTML5**: Used for development and bundling of the application.
-- **Tailwind**: Used for autoprefixing the CSS code and Tailwind integration.
-- **Vanilla JavaScript**: Used with the AirBNB standards to maintain code quality.
+- **HTML5**
+- **Tailwind**
+- **Vanilla JavaScript**
 
 ## Tools Used:
 
