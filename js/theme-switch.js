@@ -1,8 +1,6 @@
 // Gather things needed to handle color scheme switch.
 const colorSchemeToggle = document.querySelector('#color-scheme-toggle');
-const colorSchemeToggleCheckbox = colorSchemeToggle.querySelector(
-  '#color-scheme-toggle-checkbox'
-);
+const colorSchemeToggleCheckbox = colorSchemeToggle.querySelector('#color-scheme-toggle-checkbox');
 const moon = colorSchemeToggle.querySelector('#moon');
 const sun = colorSchemeToggle.querySelector('#sun');
 const root = document.documentElement;
@@ -24,8 +22,7 @@ const toggleLight = () => {
 };
 
 // Color scheme change handler.
-const handleThemeSwitch = (e) =>
-  e.currentTarget.checked ? toggleLight() : toggleDark();
+const handleThemeSwitch = (e) => (e.currentTarget.checked ? toggleLight() : toggleDark());
 
 // Toggle color scheme when toggle state changes.
 colorSchemeToggleCheckbox.addEventListener('change', handleThemeSwitch);
@@ -35,8 +32,7 @@ export default function handleThemeSwitcher() {
   // Resolve color scheme based on local storage or user preferences.
   if (
     localStorage.theme === 'dark' ||
-    (!('theme' in localStorage) &&
-      window.matchMedia('(prefers-color-scheme: dark)').matches)
+    (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
   ) {
     // Toggle app into dark mode.
     toggleDark();

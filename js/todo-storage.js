@@ -1,12 +1,16 @@
 import { generateUUIDv4 } from './utils';
 
+/**
+ * Represents a TodoStorage class for managing todo items.
+ * @extends EventTarget
+ */
 export class TodoStorage extends EventTarget {
   /**
    * Creates an instance of the TodoStorage.
    *
    * @constructor
-   * @param {String} localStorageKey - Name for the localStorage item key that will be used by the instance of the class.
-   * @returns {Void}
+   * @param {string} localStorageKey - Name for the localStorage item key that will be used by the instance of the class.
+   * @returns {void}
    */
   constructor(localStorageKey) {
     // Extend EventTarget object.
@@ -22,7 +26,7 @@ export class TodoStorage extends EventTarget {
   /**
    * Saves todo items into localStorage.
    *
-   * @returns {Void}
+   * @returns {void}
    */
   save() {
     localStorage.setItem(this.localStorageKey, JSON.stringify(this.todos));
@@ -33,17 +37,17 @@ export class TodoStorage extends EventTarget {
   /**
    * Reads todo items from the localStorage.
    *
-   * @returns {Array} - Array of todo items.
+   * @returns {array} - Array of todo items.
    */
   read() {
     return JSON.parse(localStorage.getItem(this.localStorageKey) || '[]');
   }
 
   /**
-   * Adds new todo item to the storage.
+   * Adds a new todo item to the storage.
    *
-   * @param {Object} todo - Todo item.
-   * @returns {Void}
+   * @param {object} todo - Todo item.
+   * @returns {void}
    */
   add(todo) {
     this.todos.push({
@@ -55,10 +59,10 @@ export class TodoStorage extends EventTarget {
   }
 
   /**
-   * Removes todo item from the storage.
+   * Removes a todo item from the storage.
    *
-   * @param {String} id - ID of the todo item.
-   * @returns {Void}
+   * @param {string} id - ID of the todo item.
+   * @returns {void}
    */
   remove({ id }) {
     this.todos = this.todos.filter((todo) => todo.id !== id);
@@ -66,33 +70,31 @@ export class TodoStorage extends EventTarget {
   }
 
   /**
-   * Modifies given todo item.
+   * Modifies a given todo item.
    *
-   * @param {Object} newTodo - Modified todo item.
-   * @returns {Void}
+   * @param {object} newTodo - Modified todo item.
+   * @returns {void}
    */
   update(newTodo) {
-    this.todos = this.todos.map((oldTodo) =>
-      oldTodo.id === newTodo.id ? newTodo : oldTodo
-    );
+    this.todos = this.todos.map((oldTodo) => (oldTodo.id === newTodo.id ? newTodo : oldTodo));
     this.save();
   }
 
   /**
-   * Get todo item by id.
+   * Get a todo item by ID.
    *
-   * @param {String} id - ID of the todo item.
-   * @returns {Object} - Todo item.
+   * @param {string} id - ID of the todo item.
+   * @returns {object} - Todo item.
    */
   get(id) {
     return this.todos.find((todo) => todo.id === id);
   }
 
   /**
-   * Gets todo items filtered by given filter.
+   * Gets todo items filtered by the given filter.
    *
-   * @param {String} filter - String that represents filter name.
-   * @returns {Array} - Array of todos filtered by given filter.
+   * @param {string} filter - String that represents filter name.
+   * @returns {array} - Array of todos filtered by the given filter.
    */
   getByFilter(filter) {
     // Get container for filtered todos.
@@ -114,40 +116,38 @@ export class TodoStorage extends EventTarget {
   }
 
   /**
-   * Returns if at least one todo in the storage is completed.
+   * Checks if at least one todo in the storage is completed.
    *
-   * @returns {Bool} - Bool that determines if at leats one todo in storage is completed.
+   * @returns {boolean} - Boolean indicating if at least one todo in storage is completed.
    */
   hasCompleted() {
     return this.todos.some((todo) => todo.completed);
   }
 
   /**
-   * Returns if all todos in the storage are completed.
+   * Checks if all todos in the storage are completed.
    *
-   * @returns {Bool} - Bool that determines if all todos in storage are completed.
+   * @returns {boolean} - Boolean indicating if all todos in storage are completed.
    */
   hasAllCompleted() {
     return this.todos.every((todo) => todo.completed);
   }
 
   /**
-   * Toggles completed state of given todo.
+   * Toggles the completed state of a given todo.
    *
-   * @param {String} id - ID of the todo.
-   * @returns {Void}
+   * @param {string} id - ID of the todo.
+   * @returns {void}
    */
   toggle({ id }) {
-    this.todos = this.todos.map((todo) =>
-      todo.id === id ? { ...todo, completed: !todo.completed } : todo
-    );
+    this.todos = this.todos.map((todo) => (todo.id === id ? { ...todo, completed: !todo.completed } : todo));
     this.save();
   }
 
   /**
-   * Toggles completed state of all todos.
+   * Toggles the completed state of all todos.
    *
-   * @returns {Void}
+   * @returns {void}
    */
   toggleAll() {
     const completed = !this.hasCompleted() || !this.hasAllCompleted();
@@ -158,7 +158,7 @@ export class TodoStorage extends EventTarget {
   /**
    * Removes completed todos from storage.
    *
-   * @returns {Void}
+   * @returns {void}
    */
   clearCompleted() {
     this.todos = this.todos.filter((todo) => !todo.completed);
@@ -168,7 +168,7 @@ export class TodoStorage extends EventTarget {
   /**
    * Handles localStorage modifications from another window.
    *
-   * @returns {Void}
+   * @returns {void}
    */
   handleCrossWindowEdit() {
     window.addEventListener(
