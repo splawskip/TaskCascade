@@ -13,5 +13,6 @@ module.exports = {
   rules: {
     'prettier/prettier': ['error', { singleQuote: true }],
     'import/prefer-default-export': ['off'],
+    'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
   },
 };
