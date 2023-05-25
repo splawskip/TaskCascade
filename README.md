@@ -21,10 +21,6 @@ You can access the live version of TaskCascade by visiting: [TaskCascade Live](h
 - **HTML5**: Used for development and bundling of the application.
 - **Tailwind**: Used for autoprefixing the CSS code and Tailwind integration.
 - **Vanilla JavaScript**: Used with the AirBNB standards to maintain code quality.
-- **Prettier**: Used as a code formatter to ensure consistent code style.
-- **JSDoc**: Used for generating documentation for the codebase.
-- **GitHub Pages**: Used for hosting the TaskCascade application.
-- **GitHub Actions**: Utilized as a simple CI/CD pipeline for automated deployments.
 
 ## Tools Used:
 
