@@ -140,25 +140,25 @@ const App = {
     insertHTML(
       li,
       `
-		<div class="flex flex-row flex-nowrap items-center justify-start gap-4">
-			<input
-				class="toggle relative h-6 w-6 min-w-[24px] cursor-pointer appearance-none overflow-hidden rounded-full border border-solid border-snuff bg-transparent outline-none before:absolute before:left-0 before:top-1/3 before:h-1/2 before:w-[3px] before:origin-bottom-left before:translate-x-[10px] before:-rotate-45 before:bg-white before:opacity-0 before:content-[''] after:absolute after:left-0 after:bottom-[20%] after:h-[3px] after:w-3/4 after:origin-bottom-left after:translate-x-[10px] after:-rotate-45 after:bg-white after:opacity-0 after:content-[''] checked:border-transparent checked:bg-gradient checked:before:opacity-100 checked:after:opacity-100 hover:ring-2 hover:ring-indigo-600 hover:transition-colors focus-visible:ring-2 focus-visible:ring-indigo-600 dark:border-bright"
-				data-todo="toggle"
-				type="checkbox" ${isCompleted ? 'checked' : ''}>
-			<label class="transition-colors break-all cursor-pointer grow text-lg text-mulled-wine dark:text-periwinkle-gray outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 rounded-md
-			${
-        isCompleted ? 'text-mischka dark:text-trout line-through' : ''
-      }" tabindex="0" data-todo="label"></label>
-			<button
-				class="destroy pointer-events-none relative ml-auto h-5 w-5 min-w-[20px] opacity-0 outline-none transition-opacity before:absolute before:top-1/2 before:left-1/2 before:h-px before:w-full before:-translate-x-1/2 before:-translate-y-1/2 before:rotate-45 before:border before:border-solid before:border-slate-400 before:transition-colors before:content-[''] after:absolute after:top-1/2 after:left-1/2 after:h-px after:w-full after:-translate-x-1/2 after:-translate-y-1/2 after:-rotate-45 after:border after:border-solid after:border-slate-400 after:transition-colors after:content-[''] hover:before:border-indigo-600 hover:after:border-indigo-600 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-indigo-600 group-hover:pointer-events-auto group-hover:opacity-100 rounded-md"
-				data-todo="remove"
-			></button>
-		</div>
-		<input
-    		class="absolute z-10 appearance-none inset-0 hidden h-full w-full rounded-md bg-white px-6 py-5 text-lg shadow-xl outline-none transition-colors placeholder:text-slate-500 focus:ring-2 focus:ring-indigo-600 dark:bg-ebony dark:text-slate-300 caret-indigo-600"
-    		data-todo="edit"
-  		/>
-		`
+        <div class="flex flex-row flex-nowrap items-center justify-start gap-4">
+          <input
+            class="toggle relative h-6 w-6 min-w-[24px] cursor-pointer appearance-none overflow-hidden rounded-full border border-solid border-snuff bg-transparent outline-none before:absolute before:left-0 before:top-1/3 before:h-1/2 before:w-[3px] before:origin-bottom-left before:translate-x-[10px] before:-rotate-45 before:bg-white before:opacity-0 before:content-[''] after:absolute after:left-0 after:bottom-[20%] after:h-[3px] after:w-3/4 after:origin-bottom-left after:translate-x-[10px] after:-rotate-45 after:bg-white after:opacity-0 after:content-[''] checked:border-transparent checked:bg-gradient checked:before:opacity-100 checked:after:opacity-100 hover:ring-2 hover:ring-indigo-600 hover:transition-colors focus-visible:ring-2 focus-visible:ring-indigo-600 dark:border-bright"
+            data-todo="toggle"
+            type="checkbox" ${isCompleted ? 'checked' : ''}>
+          <label class="transition-colors break-all cursor-pointer grow text-lg text-mulled-wine dark:text-periwinkle-gray outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 rounded-md
+          ${
+            isCompleted ? 'text-mischka dark:text-trout line-through' : ''
+          }" tabindex="0" data-todo="label"></label>
+          <button
+            class="destroy pointer-events-none relative ml-auto h-5 w-5 min-w-[20px] opacity-0 outline-none transition-opacity before:absolute before:top-1/2 before:left-1/2 before:h-px before:w-full before:-translate-x-1/2 before:-translate-y-1/2 before:rotate-45 before:border before:border-solid before:border-slate-400 before:transition-colors before:content-[''] after:absolute after:top-1/2 after:left-1/2 after:h-px after:w-full after:-translate-x-1/2 after:-translate-y-1/2 after:-rotate-45 after:border after:border-solid after:border-slate-400 after:transition-colors after:content-[''] hover:before:border-indigo-600 hover:after:border-indigo-600 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-indigo-600 group-hover:pointer-events-auto group-hover:opacity-100 rounded-md"
+            data-todo="remove"
+          ></button>
+        </div>
+        <input
+            class="absolute z-10 appearance-none inset-0 hidden h-full w-full rounded-md bg-white px-6 py-5 text-lg shadow-xl outline-none transition-colors placeholder:text-slate-500 focus:ring-2 focus:ring-indigo-600 dark:bg-ebony dark:text-slate-300 caret-indigo-600"
+            data-todo="edit"
+          />
+		  `
     );
     // Set label for Todo item and sanitize value entered by the user.
     li.querySelector('[data-todo="label"]').textContent = todo.title;
