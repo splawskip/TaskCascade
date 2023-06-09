@@ -7,13 +7,13 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        ebony: '#25273D',
-        snuff: '#E3E4F1',
-        bright: '#393A4B',
-        trout: '#4D5067',
-        mischka: '#D1D2DA',
-        'mulled-wine': '#494C6B',
-        'periwinkle-gray': '#C8CBE7',
+        ebony: 'hsl(235, 24%, 19%)',
+        snuff: 'hsl(236, 33%, 92%)',
+        bright: 'hsl(237, 14%, 26%)',
+        trout: 'hsl(233, 14%, 35%)',
+        mischka: 'hsl(60, 88%, 44%)',
+        'mulled-wine': 'hsl(235, 19%, 35%)',
+        'periwinkle-gray': 'hsl(234, 39%, 85%)',
       },
       fontFamily: {
         sans: ['Josefin Sans', ...defaultTheme.fontFamily.sans],
@@ -24,7 +24,8 @@ module.exports = {
       backgroundImage: {
         'hero-light': "url('/img/hero-light.jpg')",
         'hero-dark': "url('/img/hero-dark.jpg')",
-        gradient: 'linear-gradient(135deg, #55DDFF 0%, #C058F3 100%)',
+        gradient:
+          'linear-gradient(135deg, hsl(192, 100%, 67%) 0%, hsl(280, 87%, 65%) 100%)',
       },
       gridTemplateColumns: {
         'two-columns-min-content': 'repeat(2, min-content)',
