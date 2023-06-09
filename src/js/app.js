@@ -1,5 +1,4 @@
 import { delegateEvent, generateUUIDv4, getURLHash, insertHTML, replaceHTML } from './utils';
-import handleThemeSwitcher from './theme-switch';
 import { TodoStorage } from './todo-storage';
 
 /**
@@ -16,6 +15,11 @@ const App = {
   /**
    * Object that holds references to various DOM elements used by the app.
    *
+   * @property {HTMLElement} root - The root element of the document.
+   * @property {HTMLElement} themeToggle - The theme toggle element.
+   * @property {HTMLElement} themeToggleCheckbox - The checkbox element inside the theme toggle.
+   * @property {HTMLElement} moonIcon - The moon icon element.
+   * @property {HTMLElement} sunIcon - The sun icon element.
    * @property {HTMLElement} input - The input element for creating new todos.
    * @property {HTMLElement} list - The list element for displaying todos.
    * @property {HTMLElement} footer - The footer element for displaying todo statistics and filters.
@@ -24,6 +28,11 @@ const App = {
    * @property {HTMLElement} clear - The element for clearing completed todos.
    */
   $: {
+    root: document.documentElement,
+    themeToggle: document.querySelector('[data-todo="theme-toggle"]'),
+    themeToggleCheckbox: document.querySelector('[data-todo="theme-toggle-checkbox"]'),
+    moonIcon: document.querySelector('[data-todo="moon-icon"]'),
+    sunIcon: document.querySelector('[data-todo="sun-icon"]'),
     input: document.querySelector('[data-todo="new"]'),
     list: document.querySelector('[data-todo="list"]'),
     footer: document.querySelector('[data-todo="footer"]'),
@@ -203,11 +212,37 @@ const App = {
     App.Storage = new TodoStorage('TaskCascade');
   },
   /**
+   * Toggles the app into dark mode.
+   *
+   * @returns {void}
+   */
+  toggleDark() {
+    App.$.root.classList.add('dark');
+    App.$.moonIcon.classList.add('hidden');
+    App.$.sunIcon.classList.remove('hidden');
+    localStorage.theme = 'dark';
+  },
+  /**
+   * Toggles the app into light mode.
+   *
+   * @returns {void}
+   */
+  toggleLight() {
+    App.$.root.classList.remove('dark');
+    App.$.sunIcon.classList.add('hidden');
+    App.$.moonIcon.classList.remove('hidden');
+    localStorage.theme = 'light';
+  },
+  /**
    * Binds all App related events.
    *
    * @returns {void}
    */
   bindEvents() {
+    // Change app theme based on checkbox state.
+    App.$.themeToggleCheckbox.addEventListener('change', (e) =>
+      e.currentTarget.checked ? App.toggleLight() : App.toggleDark()
+    );
     // Refresh view everytime Todos data changed.
     App.Storage.addEventListener('save', App.render);
     // Handle filter change.
@@ -250,6 +285,26 @@ const App = {
     });
   },
   /**
+   * Sets the theme of the app based on local storage or user preferences.
+   *
+   * @returns {void}
+   */
+  setTheme() {
+    // Resolve color scheme based on local storage or user preferences.
+    if (
+      localStorage.theme === 'dark' ||
+      (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
+    ) {
+      // Toggle app into dark mode.
+      App.toggleDark();
+      // Trigger change event so our color scheme toggle will react.
+      App.$.themeToggleCheckbox.dispatchEvent(new Event('change'));
+    } else {
+      // Toggle app into light mode.
+      App.toggleLight();
+    }
+  },
+  /**
    * Renders App components based on state.
    *
    * @returns {void}
@@ -273,7 +328,7 @@ const App = {
    * @returns {void}
    */
   init() {
-    handleThemeSwitcher();
+    App.setTheme();
     App.setInstances();
     App.filter = getURLHash();
     App.bindEvents();

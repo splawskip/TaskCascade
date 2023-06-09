@@ -52,17 +52,20 @@
             Todo
           </h1>
           <label
-            for="color-scheme-toggle-checkbox"
-            id="color-scheme-toggle"
+            for="theme-toggle-checkbox"
+            id="theme-toggle"
+            data-todo="theme-toggle"
             class="relative grid cursor-pointer place-items-center"
           >
             <input
               type="checkbox"
-              id="color-scheme-toggle-checkbox"
+              id="theme-toggle-checkbox"
+              data-todo="theme-toggle-checkbox"
               class="pointer-events-none absolute inset-0 appearance-none rounded-md outline-none focus-visible:ring-2 focus-visible:ring-indigo-600"
             />
             <svg
               id="moon"
+              data-todo="moon-icon"
               width="26"
               height="26"
               viewBox="0 0 26 26"
@@ -77,6 +80,7 @@
             </svg>
             <svg
               id="sun"
+              data-todo="sun-icon"
               width="26"
               height="26"
               viewBox="0 0 26 26"
