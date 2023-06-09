@@ -150,6 +150,7 @@ const App = {
       'px-6',
       'py-5',
       'transition-colors',
+      'cursor-move',
       'first:rounded-t-md',
       'hover:border-indigo-400',
       'dark:border-bright',
@@ -158,6 +159,8 @@ const App = {
     );
     // Set id of the todo item on the element.
     li.dataset.id = todo.id;
+    // Allow element to be draggable.
+    li.draggable = true;
     // Insert additional HTML into Li element.
     insertHTML(
       li,
@@ -321,6 +324,42 @@ const App = {
     App.showFooter(count);
     App.updateCounter(App.Storage.getByFilter('active').length);
     App.showClear(App.Storage.hasCompleted());
+    App.handleDragAndDrop();
+  },
+  /**
+   * Initializes the drag and drop functionality for the todo list items.
+   *
+   * @returns {void}
+   */
+  handleDragAndDrop() {
+    // Prepare container for currently dragged item.
+    let draggingItem = null;
+    // Handle dragstart event.
+    App.handleTodoItemEvent('dragstart', '[data-id]', (todo, li) => {
+      li.classList.add('dragging');
+      draggingItem = li;
+    });
+    // Handle dragend event.
+    App.handleTodoItemEvent('dragend', '[data-id]', (todo, li) => {
+      li.classList.remove('dragging');
+      draggingItem = null;
+    });
+    // Handle dragover event.
+    App.$.list.addEventListener('dragover', (event) => {
+      event.preventDefault();
+      // If there is no dragging item, bail.
+      if (!draggingItem) return;
+      // Get vertical coords of the mouse during this event.
+      const mouseY = event.clientY;
+      // Find element before which we should insert currently dragged item.
+      const insertBeforeItem = [...App.$.list.querySelectorAll('[data-id]:not(.dragging)')].find(
+        (sibling) => mouseY < sibling.getBoundingClientRect().top + sibling.offsetHeight / 2
+      );
+      // Insert currently dragged item before found element.
+      App.$.list.insertBefore(draggingItem, insertBeforeItem);
+    });
+    // Handle dragenter event.
+    App.$.list.addEventListener('dragenter', (event) => event.preventDefault());
   },
   /**
    * Handles initial work before render action.
