@@ -286,6 +286,8 @@ const App = {
     App.$.clear.addEventListener('click', () => {
       App.Storage.clearCompleted();
     });
+    // Handle drag and drop events.
+    App.handleDragAndDrop();
   },
   /**
    * Sets the theme of the app based on local storage or user preferences.
@@ -324,7 +326,6 @@ const App = {
     App.showFooter(count);
     App.updateCounter(App.Storage.getByFilter('active').length);
     App.showClear(App.Storage.hasCompleted());
-    App.handleDragAndDrop();
   },
   /**
    * Initializes the drag and drop functionality for the todo list items.
@@ -355,8 +356,15 @@ const App = {
       const insertBeforeItem = [...App.$.list.querySelectorAll('[data-id]:not(.dragging)')].find(
         (sibling) => mouseY < sibling.getBoundingClientRect().top + sibling.offsetHeight / 2
       );
-      // Insert currently dragged item before found element.
+      // Get index of todo on which we are dragging over.
+      const insertBeforeItemIndex = insertBeforeItem ? insertBeforeItem.dataset.id : App.$.list.lastChild.dataset.id;
+      // Insert currently dragged item before element on which we are dragging over.
       App.$.list.insertBefore(draggingItem, insertBeforeItem);
+      // Insert currently dragged item before found element.
+      App.Storage.changeTodoIndex(
+        draggingItem.dataset.id,
+        App.Storage.todos.findIndex((todo) => todo.id === insertBeforeItemIndex)
+      );
     });
     // Handle dragenter event.
     App.$.list.addEventListener('dragenter', (event) => event.preventDefault());

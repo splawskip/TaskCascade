@@ -145,17 +145,6 @@ export class TodoStorage extends EventTarget {
   }
 
   /**
-   * Toggles the completed state of all todos.
-   *
-   * @returns {void}
-   */
-  toggleAll() {
-    const completed = !this.hasCompleted() || !this.hasAllCompleted();
-    this.todo = this.todos.map((todo) => ({ ...todo, completed }));
-    this.save();
-  }
-
-  /**
    * Removes completed todos from storage.
    *
    * @returns {void}
@@ -163,6 +152,27 @@ export class TodoStorage extends EventTarget {
   clearCompleted() {
     this.todos = this.todos.filter((todo) => !todo.completed);
     this.save();
+  }
+
+  /**
+   * Changes the index of an todo item in the storage.
+   *
+   * @param {string} id - The ID of the todo item.
+   * @param {number} newTodoIndex - The new index for the todo item.
+   * @returns {void}
+   */
+  changeTodoIndex(id, newTodoIndex) {
+    // Get current index of todo by given todo id.
+    const currentTodoIndex = this.todos.findIndex((todo) => todo.id === id);
+    // If we got the index change.
+    if (currentTodoIndex > -1) {
+      // Extract todo with found index from our storage.
+      const [todo] = this.todos.splice(currentTodoIndex, 1);
+      // Insert todo at new index.
+      this.todos.splice(newTodoIndex, 0, todo);
+      // Save.
+      this.save();
+    }
   }
 
   /**
