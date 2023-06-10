@@ -23,6 +23,7 @@ const App = {
    * @property {HTMLElement} input - The input element for creating new todos.
    * @property {HTMLElement} list - The list element for displaying todos.
    * @property {HTMLElement} footer - The footer element for displaying todo statistics and filters.
+   * @property {HTMLElement} dragAndDropDisclamer - The drag and drop disclamer element.
    * @property {HTMLElement} counter - The element for displaying the count of remaining todos.
    * @property {NodeListOf<HTMLAnchorElement>} filters - The collection of filter links.
    * @property {HTMLElement} clear - The element for clearing completed todos.
@@ -36,6 +37,7 @@ const App = {
     input: document.querySelector('[data-todo="new"]'),
     list: document.querySelector('[data-todo="list"]'),
     footer: document.querySelector('[data-todo="footer"]'),
+    dragAndDropDisclamer: document.querySelector('[data-todo="drag-and-drop-disclamer"]'),
     counter: document.querySelector('[data-todo="count"]'),
     filters: document.querySelectorAll('[data-todo="filters"] a'),
     clear: document.querySelector('[data-todo="clear-completed"]'),
@@ -75,6 +77,15 @@ const App = {
    */
   showFooter(show) {
     App.$.footer.style.display = show ? 'flex' : 'none';
+  },
+  /**
+   * Changes visbility state of the element based on value.
+   *
+   * @param {number|bool} show - Tells if component should be visible.
+   * @returns {void}
+   */
+  showDragAndDropDisclamer(show) {
+    App.$.dragAndDropDisclamer.style.display = show ? 'block' : 'none';
   },
   /**
    * Updates Counter component state.
@@ -324,6 +335,7 @@ const App = {
     // Update state of components based on Todo items count.
     App.showList(count);
     App.showFooter(count);
+    App.showDragAndDropDisclamer(count);
     App.updateCounter(App.Storage.getByFilter('active').length);
     App.showClear(App.Storage.hasCompleted());
   },
