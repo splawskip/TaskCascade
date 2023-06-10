@@ -226,6 +226,14 @@ const App = {
     App.Storage = new TodoStorage('TaskCascade');
   },
   /**
+   * Sets filter that should be currently used.
+   *
+   * @returns {void}
+   */
+  setFilter() {
+    App.filter = getURLHash();
+  },
+  /**
    * Toggles the app into dark mode.
    *
    * @returns {void}
@@ -261,7 +269,7 @@ const App = {
     App.Storage.addEventListener('save', App.render);
     // Handle filter change.
     window.addEventListener('hashchange', () => {
-      App.filter = getURLHash();
+      App.setFilter();
       App.render();
     });
     // Handle item addition.
@@ -397,7 +405,7 @@ const App = {
   init() {
     App.setTheme();
     App.setInstances();
-    App.filter = getURLHash();
+    App.setFilter();
     App.bindEvents();
     App.render();
   },
