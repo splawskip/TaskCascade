@@ -1,4 +1,4 @@
-import { delegateEvent, generateUUIDv4, getURLHash, insertHTML, replaceHTML } from './utils';
+import { delegateEvent, generateUUIDv4, getURLHash, insertHTML, replaceHTML, debounce, throttle } from './utils';
 import { TodoStorage } from './todo-storage';
 
 /**
@@ -346,26 +346,34 @@ const App = {
       draggingItem = null;
     });
     // Handle dragover event.
-    App.$.list.addEventListener('dragover', (event) => {
-      event.preventDefault();
-      // If there is no dragging item, bail.
-      if (!draggingItem) return;
-      // Get vertical coords of the mouse during this event.
-      const mouseY = event.clientY;
-      // Find element before which we should insert currently dragged item.
-      const insertBeforeItem = [...App.$.list.querySelectorAll('[data-id]:not(.dragging)')].find(
-        (sibling) => mouseY < sibling.getBoundingClientRect().top + sibling.offsetHeight / 2
-      );
-      // Get index of todo on which we are dragging over.
-      const insertBeforeItemIndex = insertBeforeItem ? insertBeforeItem.dataset.id : App.$.list.lastChild.dataset.id;
-      // Insert currently dragged item before element on which we are dragging over.
-      App.$.list.insertBefore(draggingItem, insertBeforeItem);
-      // Insert currently dragged item before found element.
-      App.Storage.changeTodoIndex(
-        draggingItem.dataset.id,
-        App.Storage.todos.findIndex((todo) => todo.id === insertBeforeItemIndex)
-      );
-    });
+    App.$.list.addEventListener(
+      'dragover',
+      debounce(
+        throttle((event) => {
+          event.preventDefault();
+          // If there is no dragging item, bail.
+          if (!draggingItem) return;
+          // Get vertical coords of the mouse during this event.
+          const mouseY = event.clientY;
+          // Find element before which we should insert currently dragged item.
+          const insertBeforeItem = [...App.$.list.querySelectorAll('[data-id]:not(.dragging)')].find(
+            (sibling) => mouseY < sibling.getBoundingClientRect().top + sibling.offsetHeight / 2
+          );
+          // Get index of todo on which we are dragging over.
+          const insertBeforeItemIndex = insertBeforeItem
+            ? insertBeforeItem.dataset.id
+            : App.$.list.lastChild.dataset.id;
+          // Insert currently dragged item before element on which we are dragging over.
+          App.$.list.insertBefore(draggingItem, insertBeforeItem);
+          // Insert currently dragged item before found element.
+          App.Storage.changeTodoIndex(
+            draggingItem.dataset.id,
+            App.Storage.todos.findIndex((todo) => todo.id === insertBeforeItemIndex)
+          );
+        }, 100)
+      ),
+      100
+    );
     // Handle dragenter event.
     App.$.list.addEventListener('dragenter', (event) => event.preventDefault());
   },

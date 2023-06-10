@@ -53,3 +53,59 @@ export function generateUUIDv4() {
   );
 }
 /* eslint-enable no-bitwise */
+
+/**
+ * Creates a debounced function that delays invoking `func` until after `wait` milliseconds have elapsed since the last time the debounced function was invoked.
+ *
+ * @param {Function} func - The function to debounce.
+ * @param {number} wait - The number of milliseconds to delay.
+ * @returns {Function} - The debounced function.
+ */
+export const debounce = (func, wait) => {
+  let timeout;
+
+  return function executedFunction(...args) {
+    /**
+     * Invokes `func` after `wait` milliseconds have elapsed since the last time the debounced function was invoked.
+     */
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+};
+
+/**
+ * Throttles the execution of a function to a specified delay.
+ *
+ * @param {Function} func - The function to be throttled.
+ * @param {number} delay - The minimum time interval between function executions.
+ * @returns {Function} - The throttled function.
+ */
+export const throttle = (func, delay) => {
+  let timerId;
+  let lastExecTime = 0;
+
+  /**
+   * The throttled function.
+   *
+   * @param {...*} args - The arguments to be passed to the original function.
+   */
+  return function throttledFunction(...args) {
+    const currentTime = Date.now();
+
+    if (currentTime - lastExecTime < delay) {
+      clearTimeout(timerId);
+      timerId = setTimeout(() => {
+        func.apply(this, args);
+        lastExecTime = currentTime;
+      }, delay);
+    } else {
+      func.apply(this, args);
+      lastExecTime = currentTime;
+    }
+  };
+};
